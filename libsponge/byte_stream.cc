@@ -34,7 +34,7 @@ size_t ByteStream::write(const string &data) {
             content.replace(
                 _begin + _size, content.size() - (_begin + _size), data.substr(0, content.size() - (_begin + _size)));
             content.replace(
-                0, _begin + _size + write_size - content.size(), data.substr(content.size() - _begin, write_size));
+                0, _begin + _size + write_size - content.size(), data.substr(content.size() - (_begin + _size), write_size));
         } else {
             content.replace((_begin + _size) % content.size(), write_size, data.substr(0, write_size));
         }
