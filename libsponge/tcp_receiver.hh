@@ -14,13 +14,35 @@
 //! the acknowledgment number and window size to advertise back to the
 //! remote TCPSender.
 class TCPReceiver {
+
     //! Our data structure for re-assembling bytes.
     StreamReassembler _reassembler;
 
     //! The maximum number of bytes we'll store.
     size_t _capacity;
 
-  public:
+    //! used to describe state of TCPReceiver
+    enum State {
+      LISTEN, 
+      SYN_RECV,
+      FIN_RECV,
+      ERROR  
+    };
+
+    //! state of TCPReceiver
+    State state{};
+    //! acknowledgement number
+    std::optional<WrappingInt32>_ackno{};
+
+    //！ The initial sequence number
+    WrappingInt32 _isn{{}};
+
+    //! \brief push substring to `_reassembler`
+    //!
+    //! \param seg the segment with payload to push to `_reassembler`.
+    void push_payload(const TCPSegment& seg);
+
+public:
     //! \brief Construct a TCP receiver
     //!
     //! \param capacity the maximum number of bytes that the receiver will
